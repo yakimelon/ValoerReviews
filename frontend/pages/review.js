@@ -115,6 +115,9 @@ export default function Review() {
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">レビューを投稿</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
+                <label htmlFor="name" className="block mb-1 font-medium">
+                    RIOT IDとタグは？
+                </label>
                 <div className="flex items-center space-x-2">
                     <input
                         type="text"
@@ -137,7 +140,7 @@ export default function Review() {
 
                 <div>
                     <label htmlFor="rank" className="block mb-1 font-medium">
-                        ランク
+                        この人のランクは？
                     </label>
                     <select
                         id="rank"
@@ -145,7 +148,7 @@ export default function Review() {
                         onChange={(e) => setRank(e.target.value)}
                         className="w-full border rounded p-2"
                     >
-                        {['ブロンズ', 'シルバー', 'ゴールド', 'プラチナ', 'ダイヤモンド'].map((rank) => (
+                        {['プラスチック', 'アイアン', 'ブロンズ', 'シルバー', 'ゴールド', 'プラチナ', 'ダイヤモンド', 'アセンダント', 'イモータル', 'レディアント'].map((rank) => (
                             <option key={rank} value={rank}>
                                 {rank}
                             </option>
