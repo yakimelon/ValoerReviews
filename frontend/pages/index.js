@@ -101,7 +101,7 @@ export default function Home() {
                                             ))}
                                     </p>
 
-                                    <p className="text-sm">ランク: {review.rank}</p>
+                                    <p className="text-sm">対象者のランク: {review.rank}</p>
                                     <p className="whitespace-pre-wrap">{review.comment}</p>
                                     <p className="text-xs text-gray-500">
                                         {new Date(review.created_at).toLocaleString()}

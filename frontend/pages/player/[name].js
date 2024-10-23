@@ -75,7 +75,7 @@ export default function PlayerReviews() {
                             <p className="text-sm font-semibold">
                                 レビュアー: {review.users?.username || '匿名'}
                             </p>
-                            <p className="text-sm">ランク: {review.rank}</p>
+                            <p className="text-sm">対象者のランク: {review.rank}</p>
 
                             {/* 星評価の表示 */}
                             <p className="text-sm">
