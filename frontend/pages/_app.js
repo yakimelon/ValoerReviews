@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 export default function MyApp({ Component, pageProps }) {
     const [session, setSession] = useState(null);
@@ -48,8 +49,38 @@ export default function MyApp({ Component, pageProps }) {
         router.push('/');
     };
 
+    useEffect(() => {
+        // Google Analyticsのページビューをトラッキング
+        const handleRouteChange = (url) => {
+            window.gtag('config', 'G-8F17EBZB35', {
+                page_path: url,
+            });
+        };
+
+        router.events.on('routeChangeComplete', handleRouteChange);
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.events]);
+
     return (
         <div>
+            <Head>
+                {/* Google Analytics スクリプト */}
+                <script async src={`https://www.googletagmanager.com/gtag/js?id=G-8F17EBZB35`}></script>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'G-8F17EBZB35', {
+                                page_path: window.location.pathname,
+                            });
+                        `,
+                    }}
+                />
+            </Head>
             <Header session={session} username={username} onLogout={handleLogout} />
             <Component {...pageProps} />
         </div>
@@ -167,6 +198,5 @@ function Header({ session, username, onLogout }) {
                 </div>
             )}
         </header>
-
     );
 }
