@@ -33,20 +33,20 @@ export default function Home() {
         const { data, error } = await supabase
             .from('players')
             .select(`
-        id,
-        name,
-        reviews (
-          id,
-          rank,
-          rating,
-          comment,
-          created_at,
-          users (
-            username
-          )
-        )
-      `)
-            .order('created_at', { foreignTable: 'reviews', ascending: false });
+            id,
+            name,
+            reviews (
+                id,
+                rank,
+                rating,
+                comment,
+                created_at,
+                users (
+                    username
+                )
+            )
+        `)
+            .order('id', { ascending: false }) // プレイヤーIDでソート
 
         if (error) {
             console.error('Error fetching players and reviews:', error);
@@ -55,6 +55,7 @@ export default function Home() {
             setPlayersWithReviews(data);
         }
     };
+
 
     return (
         <div className="container mx-auto p-6">
