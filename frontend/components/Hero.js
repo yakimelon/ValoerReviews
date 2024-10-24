@@ -8,6 +8,7 @@ const Hero = () => {
                 alt="VALORANT プレイヤー レビューサイト"
                 layout="fill"
                 objectFit="cover"
+                objectPosition="left"
                 className="opacity-80"
             />
             <div className="absolute text-white text-center p-4">
