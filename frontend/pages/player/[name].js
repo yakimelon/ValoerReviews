@@ -54,7 +54,7 @@ export default function PlayerReviews() {
     };
 
     const buildPlayerTweetText = () => {
-        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n #VALORANT #ValoerReviews\n\nVALORANTプレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
+        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n\n#ValoerReviews は #VALORANT プレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
     }
 
     if (!player) return <p>Loading...</p>;
