@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from "@/components/Footer";
-import {faSignInAlt, faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faSignInAlt, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export default function MyApp({ Component, pageProps }) {
@@ -98,7 +98,7 @@ export default function MyApp({ Component, pageProps }) {
 }
 
 // ヘッダーコンポーネント
-function Header({session, username, onLogout}) {
+function Header({ session, username, onLogout }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -141,7 +141,7 @@ function Header({session, username, onLogout}) {
     };
 
     return (
-        <header className="bg-gray-800 text-white p-4 flex justify-between items-center space-x-4">
+        <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
             <h1
                 className="text-xl font-bold cursor-pointer"
                 onClick={() => router.push('/')}
@@ -149,7 +149,8 @@ function Header({session, username, onLogout}) {
                 Valoer Reviews
             </h1>
 
-            <div className="relative flex-grow max-w-xl">
+            {/* 検索バーはモバイルでは非表示 */}
+            <div className="relative hidden sm:flex max-w-xl flex-grow">
                 <input
                     type="text"
                     value={searchTerm}
@@ -172,15 +173,55 @@ function Header({session, username, onLogout}) {
                 )}
             </div>
 
-            {session ? (
-                <div className="relative" ref={menuRef}>
-                    <button
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        className="text-white font-semibold"
-                    >
-                        {username}
-                    </button>
-                    {menuOpen && (
+            {/* ハンバーガーメニューアイコン */}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="sm:hidden">
+                <FontAwesomeIcon icon={faBars} />
+            </button>
+
+            {/* モバイルメニュー */}
+            {menuOpen && (
+                <div className="absolute top-14 right-0 w-48 bg-gray-800 text-white rounded shadow-lg z-20">
+                    {session ? (
+                        <>
+                            <div className="p-2">{username}</div>
+                            <button
+                                onClick={onLogout}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+                            >
+                                ログアウト
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => router.push('/login')}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+                            >
+                                <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
+                                サインイン
+                            </button>
+                            <button
+                                onClick={() => router.push('/signup')}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+                            >
+                                <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+                                サインアップ
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {/* PC画面用のサインインとサインアップボタン */}
+            <div className="hidden sm:flex">
+                {session ? (
+                    <div className="relative">
+                        <button
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            className="text-white font-semibold"
+                        >
+                            {username}
+                        </button>
                         <div className="absolute right-0 mt-2 bg-white text-black rounded shadow p-2">
                             <button
                                 onClick={onLogout}
@@ -189,26 +230,26 @@ function Header({session, username, onLogout}) {
                                 ログアウト
                             </button>
                         </div>
-                    )}
-                </div>
-            ) : (
-                <div>
-                    <button
-                        onClick={() => router.push('/login')}
-                        className="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                        <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
-                        サインイン
-                    </button>
-                    <button
-                        onClick={() => router.push('/signup')}
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                        <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
-                        サインアップ
-                    </button>
-                </div>
-            )}
+                    </div>
+                ) : (
+                    <>
+                        <button
+                            onClick={() => router.push('/login')}
+                            className="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
+                            サインイン
+                        </button>
+                        <button
+                            onClick={() => router.push('/signup')}
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+                            サインアップ
+                        </button>
+                    </>
+                )}
+            </div>
         </header>
     );
 }
