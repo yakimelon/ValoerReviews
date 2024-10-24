@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
+import Hero from "@/components/Hero";
 
 export default function Home() {
     const [playersWithReviews, setPlayersWithReviews] = useState([]);
     const [session, setSession] = useState(null);
+    const [randomText, setRandomText] = useState('');
     const router = useRouter();
 
     useEffect(() => {
@@ -56,10 +58,36 @@ export default function Home() {
         }
     };
 
+    useEffect(() => {
+        const texts = [
+            '野良はどんな人？',
+            'マッチの待ち時間にレビューしよう',
+            '怖い思いをしなかった？',
+            'VALORANT、楽しいよね',
+            'トロールは粛清しよう',
+            'ゲームでも暴言は許されない',
+            '今の試合、スマーフはいなかった？',
+            '野良をレビューをしよう',
+            'プレイヤー同士がもっと仲良く',
+            '味方のデュエリストはエントリーしてた？',
+            'エントリーするときにスモークはあった？',
+            '高圧的な野良を報告しよう',
+        ];
+
+        const getRandomText = () => {
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            return texts[randomIndex];
+        };
+
+        setRandomText(getRandomText());
+    }, []);
+
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-4xl font-bold mb-8 text-center">野良はどんな人？</h1>
+            <Hero />
+
+            <h1 className="mt-10 text-4xl font-bold mb-8 text-center">{ randomText }</h1>
 
             <div className="text-center mb-8">
                 <p className="mb-4 text-lg font-semibold">
