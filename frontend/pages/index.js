@@ -7,6 +7,8 @@ export default function Home() {
     const [playersWithReviews, setPlayersWithReviews] = useState([]);
     const [session, setSession] = useState(null);
     const [randomText, setRandomText] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -48,7 +50,7 @@ export default function Home() {
                 )
             )
         `)
-            .order('id', { ascending: false }) // プレイヤーIDでソート
+            .order('id', { ascending: false }); // プレイヤーIDでソート
 
         if (error) {
             console.error('Error fetching players and reviews:', error);
@@ -82,12 +84,33 @@ export default function Home() {
         setRandomText(getRandomText());
     }, []);
 
+    const handleSearch = async (term) => {
+        setSearchTerm(term);
+        if (term.length > 0) {
+            const { data, error } = await supabase
+                .from('players')
+                .select('id, name')
+                .ilike('name', `%${term}%`); // 部分一致検索
+
+            if (!error) {
+                setSearchResults(data);
+            }
+        } else {
+            setSearchResults([]);
+        }
+    };
+
+    const handleSelectPlayer = (playerName) => {
+        router.push(`/player/${encodeURIComponent(playerName)}`);
+        setSearchTerm(''); // 検索バーをクリア
+        setSearchResults([]); // 検索結果をクリア
+    };
 
     return (
         <div className="container mx-auto p-6">
-            <Hero />
+            <Hero/>
 
-            <h1 className="mt-10 text-4xl font-bold mb-8 text-center">{ randomText }</h1>
+            <h1 className="mt-10 text-4xl font-bold mb-8 text-center">{randomText}</h1>
 
             <div className="text-center mb-8">
                 <p className="mb-4 text-lg font-semibold">
@@ -99,6 +122,32 @@ export default function Home() {
                 >
                     レビューを投稿する
                 </button>
+            </div>
+
+            <div className="flex justify-center items-center mb-8">
+                <div className="relative w-full max-w-xl">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        placeholder="プレイヤー名で検索"
+                        className="p-2 rounded border border-gray-300 text-black w-full"
+                    />
+                    {searchResults.length > 0 && (
+                        <div
+                            className="absolute top-full left-0 w-full max-w-xl bg-white text-black rounded shadow-md mt-1 z-10">
+                            {searchResults.map((player) => (
+                                <div
+                                    key={player.id}
+                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                    onClick={() => handleSelectPlayer(player.name)}
+                                >
+                                    {player.name}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20">
@@ -124,8 +173,8 @@ export default function Home() {
                                             .map((star, index) => (
                                                 <span key={index}
                                                       className={index < review.rating ? 'text-yellow-500' : ''}>
-                            {index < review.rating ? '★' : '☆'}
-                        </span>
+                                                    {index < review.rating ? '★' : '☆'}
+                                                </span>
                                             ))}
                                     </p>
 
