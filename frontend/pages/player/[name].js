@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import TweetButton from "@/components/TweetButton";
 
 export default function PlayerReviews() {
     const [player, setPlayer] = useState(null);
@@ -51,13 +52,19 @@ export default function PlayerReviews() {
         setAverageRating(average);
     };
 
+    const buildPlayerTweetText = () => {
+        const text = `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n #VALORANT #ValoerReviews\n\nVALORANTプレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
+        return text;
+    }
+
     if (!player) return <p>Loading...</p>;
 
     return (
         <div className="container mx-auto p-6">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-3xl font-bold flex items-center">
                     {player.name} のレビュー（平均評価: {averageRating}）
+                    <TweetButton text={buildPlayerTweetText()} url={window.location.href} />
                 </h1>
                 <button
                     onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
