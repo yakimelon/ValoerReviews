@@ -116,7 +116,7 @@ export default function Home() {
 
             <div className="text-center mb-8">
                 <p className="mb-4 text-lg font-semibold">
-                    プレイヤー名を入力してレビューを投稿する
+                    プレイヤー名を入力してレビューする
                 </p>
                 <button
                     onClick={() => router.push('/review')}
