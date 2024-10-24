@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
 
 export default function Signup() {
     const [email, setEmail] = useState('');
@@ -86,6 +88,7 @@ export default function Signup() {
                     type="submit"
                     className="w-full bg-green-500 text-white p-2 rounded"
                 >
+                    <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
                     サインアップ
                 </button>
             </form>

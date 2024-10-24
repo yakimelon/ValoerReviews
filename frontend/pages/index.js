@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
 import Hero from "@/components/Hero";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCommentDots, faEye} from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     const [playersWithReviews, setPlayersWithReviews] = useState([]);
@@ -120,6 +122,7 @@ export default function Home() {
                     onClick={() => router.push('/review')}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
+                    <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
                     レビューを投稿する
                 </button>
             </div>
@@ -193,7 +196,8 @@ export default function Home() {
                             onClick={() => router.push(`/player/${encodeURIComponent(player.name)}`)}
                             className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white py-1 px-4 rounded"
                         >
-                            すべてのレビューを見る
+                            <FontAwesomeIcon icon={faEye} className="mr-2" />
+                            レビューを見る
                         </button>
                     </div>
                 ))}

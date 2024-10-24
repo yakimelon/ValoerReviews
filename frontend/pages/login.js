@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSignInAlt} from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -70,6 +72,7 @@ export default function Login() {
                     type="submit"
                     className="w-full bg-blue-500 text-white p-2 rounded"
                 >
+                    <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
                     ログイン
                 </button>
             </form>

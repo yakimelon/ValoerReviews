@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from "@/components/Footer";
+import {faSignInAlt, faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export default function MyApp({ Component, pageProps }) {
     const [session, setSession] = useState(null);
@@ -195,12 +197,14 @@ function Header({session, username, onLogout}) {
                         onClick={() => router.push('/login')}
                         className="mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
+                        <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
                         サインイン
                     </button>
                     <button
                         onClick={() => router.push('/signup')}
                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                     >
+                        <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
                         サインアップ
                     </button>
                 </div>

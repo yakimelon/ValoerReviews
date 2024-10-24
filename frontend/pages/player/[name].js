@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import TweetButton from "@/components/TweetButton";
 import Head from "next/head";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCommentDots} from "@fortawesome/free-solid-svg-icons";
 
 export default function PlayerReviews() {
     const [player, setPlayer] = useState(null);
@@ -83,8 +85,10 @@ export default function PlayerReviews() {
                     </div>
                     <button
                         onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
-                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                        className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700 font-bold"
+                        style={{ fontSize: '14px' }}
                     >
+                        <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
                         レビューを投稿する
                     </button>
                 </div>
