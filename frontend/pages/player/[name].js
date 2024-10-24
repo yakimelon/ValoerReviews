@@ -73,17 +73,21 @@ export default function PlayerReviews() {
                 <meta property="og:type" content="website" />
             </Head>
 
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-3xl font-bold flex items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
+                <h1 className="text-3xl font-bold mb-4 sm:mb-0">
                     {player.name} のレビュー（平均評価: {averageRating}）
-                    <TweetButton text={buildPlayerTweetText()} url={`https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`} />
                 </h1>
-                <button
-                    onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                >
-                    レビューを投稿する
-                </button>
+                <div className="flex flex-col sm:flex-row">
+                    <div className="mb-2 sm:mb-0 sm:mr-2">
+                        <TweetButton text={buildPlayerTweetText()} url={`https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`} />
+                    </div>
+                    <button
+                        onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
+                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    >
+                        レビューを投稿する
+                    </button>
+                </div>
             </div>
 
             {player.reviews.length > 0 ? (
