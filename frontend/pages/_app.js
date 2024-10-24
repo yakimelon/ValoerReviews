@@ -80,15 +80,21 @@ export default function MyApp({ Component, pageProps }) {
                         `,
                     }}
                 />
+                <title>Valoer Reviews｜プレイヤーレビューサイト</title>
+                <meta property="og:title" content="Valoer Reviews｜プレイヤーレビューサイト"/>
+                <meta property="og:description" content="Valoer Reviews で日々の VALORANT をもっと楽しく、ストレスフリーにしませんか？"/>
+                <meta property="og:image" content="https://i.gyazo.com/407fcbebfc844122710093a7ea83b4c9.jpg"/>
+                <meta property="og:url" content="https://valoer-reviews.vercel.app"/>
+                <meta property="og:type" content="website"/>
             </Head>
-            <Header session={session} username={username} onLogout={handleLogout} />
+            <Header session={session} username={username} onLogout={handleLogout}/>
             <Component {...pageProps} />
         </div>
     );
 }
 
 // ヘッダーコンポーネント
-function Header({ session, username, onLogout }) {
+function Header({session, username, onLogout}) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);

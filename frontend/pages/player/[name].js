@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import TweetButton from "@/components/TweetButton";
+import Head from "next/head";
 
 export default function PlayerReviews() {
     const [player, setPlayer] = useState(null);
@@ -53,18 +54,29 @@ export default function PlayerReviews() {
     };
 
     const buildPlayerTweetText = () => {
-        const text = `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n #VALORANT #ValoerReviews\n\nVALORANTプレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
-        return text;
+        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n #VALORANT #ValoerReviews\n\nVALORANTプレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
     }
 
     if (!player) return <p>Loading...</p>;
 
+    const ogImageUrl = 'https://i.gyazo.com/407fcbebfc844122710093a7ea83b4c9.jpg'; // OGP画像のURL
+    const ogUrl = `https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`; // OGP URL
+
     return (
         <div className="container mx-auto p-6">
+            <Head>
+                <title>{player.name} のレビュー｜Valoer Reviews</title>
+                <meta property="og:title" content={`${player.name} のレビュー｜Valoer Reviews`} />
+                <meta property="og:description" content={`${player.name}のレビュー平均は${averageRating}です。`} />
+                <meta property="og:image" content={ogImageUrl} />
+                <meta property="og:url" content={ogUrl} />
+                <meta property="og:type" content="website" />
+            </Head>
+
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-bold flex items-center">
                     {player.name} のレビュー（平均評価: {averageRating}）
-                    <TweetButton text={buildPlayerTweetText()} url={window.location.href} />
+                    <TweetButton text={buildPlayerTweetText()} url={`https://valoer-reviews.vercel.app/player/${player.name}`} />
                 </h1>
                 <button
                     onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
