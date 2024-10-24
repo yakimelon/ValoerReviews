@@ -76,7 +76,7 @@ export default function PlayerReviews() {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-bold flex items-center">
                     {player.name} のレビュー（平均評価: {averageRating}）
-                    <TweetButton text={buildPlayerTweetText()} url={encodeURIComponent(`https://valoer-reviews.vercel.app/player/${player.name}`)} />
+                    <TweetButton text={buildPlayerTweetText()} url={`https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`} />
                 </h1>
                 <button
                     onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
