@@ -189,6 +189,12 @@ function Header({session, username, onLogout}) {
                         <>
                             <div className="p-2">{username}</div>
                             <button
+                                onClick={() => router.push('/change_username')}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+                            >
+                                プロフィール変更
+                            </button>
+                            <button
                                 onClick={onLogout}
                                 className="block w-full text-left px-4 py-2 hover:bg-gray-700"
                             >
@@ -201,7 +207,7 @@ function Header({session, username, onLogout}) {
                                 onClick={() => router.push('/login')}
                                 className="block w-full text-left px-4 py-2 hover:bg-gray-700"
                             >
-                                <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
+                            <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
                                 サインイン
                             </button>
                             <button
