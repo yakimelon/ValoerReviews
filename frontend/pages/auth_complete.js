@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
 
 const AuthComplete = () => {
-    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
+    const [tag, setTag] = useState('');
     const router = useRouter();
 
     useEffect(() => {
@@ -22,6 +23,8 @@ const AuthComplete = () => {
         e.preventDefault();
 
         const { data: { user }, error } = await supabase.auth.getUser();
+        // 名前とタグを結合してユーザー名を作成
+        const username = `${name}#${tag}`;
 
         if (user) {
             // users テーブルにユーザー名を登録
@@ -63,16 +66,27 @@ const AuthComplete = () => {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">ユーザー名の登録</h1>
+            <h1 className="text-2xl font-bold mb-4">RIOT IDの登録</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    placeholder="ユーザー名"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full border rounded p-2"
-                    required
-                />
+                <div className="flex items-center space-x-2">
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="名前入力"
+                        className="border rounded p-2 flex-grow"
+                        required
+                    />
+                    <span>#</span>
+                    <input
+                        type="text"
+                        value={tag}
+                        onChange={(e) => setTag(e.target.value)}
+                        placeholder="タグ名入力"
+                        className="border rounded p-2 flex-grow"
+                        required
+                    />
+                </div>
                 <button
                     type="submit"
                     className="w-full bg-green-500 text-white p-2 rounded"
