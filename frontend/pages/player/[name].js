@@ -61,7 +61,7 @@ export default function PlayerReviews() {
 
     if (!player) return <p>Loading...</p>;
 
-    const ogImageUrl = 'https://i.gyazo.com/407fcbebfc844122710093a7ea83b4c9.jpg'; // OGP画像のURL
+    const ogImageUrl = 'https://i.gyazo.com/07258026dd555df91524629538086396.png'; // OGP画像のURL
     const ogUrl = `https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`; // OGP URL
 
     return (
