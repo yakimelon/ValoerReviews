@@ -59,41 +59,6 @@ export default function Signup() {
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">サインアップ</h1>
-            <form onSubmit={handleSignup} className="space-y-4">
-                <input
-                    type="text"
-                    placeholder="ユーザー名"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full border rounded p-2"
-                    required
-                />
-                <input
-                    type="email"
-                    placeholder="メールアドレス"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border rounded p-2"
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="パスワード"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border rounded p-2"
-                    required
-                />
-                <button
-                    type="submit"
-                    className="w-full bg-green-500 text-white p-2 rounded"
-                >
-                    <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
-                    サインアップ
-                </button>
-            </form>
-            <hr className="my-4"/>
-
             <div className="mt-4">
                 <button
                     onClick={handleGoogleLogin}
