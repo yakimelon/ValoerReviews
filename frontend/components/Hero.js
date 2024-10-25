@@ -4,7 +4,7 @@ const Hero = () => {
     return (
         <div className="relative w-full h-[400px] flex items-center justify-center">
             <Image
-                src="/hero.jpg"
+                src="/hero.png"
                 alt="VALORANT プレイヤー レビューサイト"
                 layout="fill"
                 objectFit="cover"

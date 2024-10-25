@@ -11,10 +11,7 @@ const Footer = () => {
                 </Link>
             </div>
             <div>
-                <p className="text-sm">© {currentYear} Valoer Reviews. All rights reserved.</p>
-            </div>
-            <div>
-                <p className="text-sm">valoer.reviews@gmail.com</p>
+                <p className="text-sm">© {currentYear} Reviewant. All rights reserved.</p>
             </div>
         </footer>
     );

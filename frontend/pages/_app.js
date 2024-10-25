@@ -4,8 +4,8 @@ import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from "@/components/Footer";
-import {faBars, faSignInAlt, faUserPlus} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faBars, faSignInAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function MyApp({ Component, pageProps }) {
     const [session, setSession] = useState(null);
@@ -83,22 +83,25 @@ export default function MyApp({ Component, pageProps }) {
                         `,
                     }}
                 />
-                <title>Valoer Reviews｜プレイヤーレビューサイト</title>
-                <meta property="og:title" content="Valoer Reviews｜プレイヤーレビューサイト"/>
-                <meta property="og:description" content="Valoer Reviews で日々の VALORANT をもっと楽しく、ストレスフリーにしませんか？"/>
+                <title>Reviewant｜プレイヤーレビューサイト</title>
+                <meta property="og:title" content="Reviewant｜プレイヤーレビューサイト"/>
+                <meta property="og:description"
+                      content="Reviewant で日々の VALORANT をもっと楽しく、ストレスフリーにしませんか？"/>
                 <meta property="og:image" content="https://i.gyazo.com/407fcbebfc844122710093a7ea83b4c9.jpg"/>
                 <meta property="og:url" content="https://valoer-reviews.vercel.app"/>
                 <meta property="og:type" content="website"/>
             </Head>
             <Header session={session} username={username} onLogout={handleLogout}/>
-            <Component {...pageProps} />
-            <Footer />
+            <div className="mt-[82px]">
+                <Component {...pageProps} />
+            </div>
+            <Footer/>
         </div>
     );
 }
 
 // ヘッダーコンポーネント
-function Header({ session, username, onLogout }) {
+function Header({session, username, onLogout}) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -141,13 +144,14 @@ function Header({ session, username, onLogout }) {
     };
 
     return (
-        <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
-            <h1
-                className="text-xl font-bold cursor-pointer"
+        <header className="bg-gray-800 text-white p-4 fixed top-0 left-0 right-0 z-50 flex justify-between items-center mb-6">
+            <img
+                src="/logo.png"
+                alt="Valoer Reviews Logo"
+                className="cursor-pointer h-12"
+                style={{ marginTop: '-8px' }}
                 onClick={() => router.push('/')}
-            >
-                Valoer Reviews
-            </h1>
+            />
 
             {/* 検索バーはモバイルでは非表示 */}
             <div className="relative hidden sm:flex max-w-xl flex-grow">

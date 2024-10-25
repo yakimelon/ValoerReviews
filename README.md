@@ -1,11 +1,11 @@
-## Valoer Reviews
+## Reviewant
 
 野良の VALORANT プレイヤーのレビューをするサイト。  
 良いとこも悪いとこも伝え合って、日本人の VALORANT プレイヤーのレベルアップを目指す。
 
 ## サイトアクセス
 
-https://valoer-reviews.vercel.app/
+https://reviewant.games/
 
 ## ライセンス
 

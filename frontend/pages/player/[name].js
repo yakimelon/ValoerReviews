@@ -56,7 +56,7 @@ export default function PlayerReviews() {
     };
 
     const buildPlayerTweetText = () => {
-        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n\n#ValoerReviews は #VALORANT プレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
+        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n\n#Reviewant は #VALORANT プレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
     }
 
     if (!player) return <p>Loading...</p>;
@@ -67,8 +67,8 @@ export default function PlayerReviews() {
     return (
         <div className="container mx-auto p-6">
             <Head>
-                <title>{player.name} のレビュー｜Valoer Reviews</title>
-                <meta property="og:title" content={`${player.name} のレビュー｜Valoer Reviews`} />
+                <title>{player.name} のレビュー｜Reviewant</title>
+                <meta property="og:title" content={`${player.name} のレビュー｜Reviewant`} />
                 <meta property="og:description" content={`${player.name}のレビュー平均は${averageRating}です。`} />
                 <meta property="og:image" content={ogImageUrl} />
                 <meta property="og:url" content={ogUrl} />
