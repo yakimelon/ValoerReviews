@@ -58,13 +58,22 @@ const MatchList = ({ matches }) => {
 
     const buildTimestamp = (timestamp) => {
         const inputDate = new Date(timestamp);
-        const year = inputDate.getFullYear();
-        const month = String(inputDate.getMonth() + 1).padStart(2, '0'); // 月は0から始まるため +1
-        const day = String(inputDate.getDate()).padStart(2, '0');
-        const hours = String(inputDate.getHours()).padStart(2, '0');
-        const minutes = String(inputDate.getMinutes()).padStart(2, '0');
-        return `${year}/${month}/${day} ${hours}:${minutes}`;
-    }
+
+        // 日本時間に変換
+        const options = {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false // 24時間制
+        };
+
+        const formattedDate = new Intl.DateTimeFormat('ja-JP', options).format(inputDate);
+
+        return formattedDate.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2})/, '$1/$2/$3 $4:$5');
+    };
 
     return (
         <div className="container mx-auto p-6">
