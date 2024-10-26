@@ -1,11 +1,61 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faLightbulb} from "@fortawesome/free-solid-svg-icons";
-import {supabase} from "@/lib/supabaseClient"; // ここを追加
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLightbulb, faSync } from "@fortawesome/free-solid-svg-icons";
+import { supabase } from "@/lib/supabaseClient";
 
 const MatchList = ({ matches }) => {
     const router = useRouter();
+    const [canRefresh, setCanRefresh] = useState(true);
+    const [countdown, setCountdown] = useState(0);
+
+    // 更新ボタンの処理
+    const handleRefresh = () => {
+        localStorage.removeItem("MATCH_CACHE"); // localStorageのクリア
+        localStorage.setItem("LAST_REFRESH", Date.now()); // 現在の時刻を保存
+        router.reload(); // ページのリロード
+    };
+
+    // 5分ごとの更新制御
+    useEffect(() => {
+        const lastRefresh = localStorage.getItem("LAST_REFRESH");
+
+        // 最後の更新時刻が存在する場合
+        if (lastRefresh) {
+            const lastRefreshTime = Number(lastRefresh);
+            const timeSinceLastRefresh = Math.floor((Date.now() - lastRefreshTime) / 1000); // 秒単位で経過時間を計算
+
+            if (timeSinceLastRefresh < 300) {
+                setCountdown(300 - timeSinceLastRefresh); // 残り時間を計算
+                setCanRefresh(false);
+            }
+        }
+
+        let timer;
+        if (!canRefresh) {
+            timer = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev <= 0) {
+                        setCanRefresh(true);
+                        localStorage.removeItem("LAST_REFRESH"); // リセット
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000); // 1秒ごとにカウントダウン
+        }
+
+        return () => clearInterval(timer);
+    }, [canRefresh]);
+
+    // ボタンを押したときの処理
+    const handleButtonClick = () => {
+        if (canRefresh) {
+            handleRefresh();
+            setCanRefresh(false);
+            setCountdown(300); // 5分のカウントダウンを設定
+        }
+    };
 
     return (
         <div className="container mx-auto p-6">
@@ -28,9 +78,21 @@ const MatchList = ({ matches }) => {
                 してください。
             </p>
 
-            <br/>
+            <br />
 
-            <h1 className="text-2xl font-bold mb-4">直近のマッチ一覧</h1>
+            <h1 className="text-2xl font-bold mb-4 flex items-center justify-between">
+                直近のコンペティティブ一覧
+                <button
+                    onClick={handleButtonClick}
+                    className={`ml-4 ${canRefresh ? 'bg-green-500' : 'text-gray-400'} flex items-center text-white py-1 px-4 rounded ${canRefresh ? 'hover:bg-green-700' : ''} font-bold`}
+                    disabled={!canRefresh}
+                >
+                    <FontAwesomeIcon icon={faSync} className="mr-1" />
+                    {canRefresh ? '更新' : `残り ${countdown}秒`}
+                </button>
+            </h1>
+
+
             <table className="min-w-full">
                 <thead>
                 <tr className="bg-gray-800 text-white text-left">
@@ -42,7 +104,7 @@ const MatchList = ({ matches }) => {
                 </thead>
                 <tbody>
                 {matches.map((match, index) => {
-                    const {match_id, my_agent_image, mode, timestamp, map, my_team_round, enemy_team_round, kill, death, assist} = match.metadata;
+                    const { match_id, my_agent_image, mode, timestamp, map, my_team_round, enemy_team_round, kill, death, assist } = match.metadata;
 
                     // 背景色の交互設定
                     const rowClass = index % 2 === 0 ? 'bg-gray-900' : 'bg-gray-800';
@@ -54,8 +116,8 @@ const MatchList = ({ matches }) => {
                             onClick={() => router.push(`/matches/${match_id}`)}
                         >
                             <td className="px-4 py-2 flex items-center text-lg">
-                                <td className="" style={{width: '50px'}}>
-                                    <img src={my_agent_image} alt=""/>
+                                <td className="" style={{ width: '50px' }}>
+                                    <img src={my_agent_image} alt="" />
                                 </td>
                             </td>
                             <td className="px-4 py-2 text-white">
@@ -63,7 +125,7 @@ const MatchList = ({ matches }) => {
                                 <div className="text-lg">{map}</div>
                             </td>
                             <td className="px-4 py-2 text-lg">
-                                <span className="text-green-500">{my_team_round}</span> ：
+                                <span className="text-green-500">{my_team_round}</span>：
                                 <span className="text-red-500">{enemy_team_round}</span>
                             </td>
                             <td className="px-4 py-2 text-white text-lg">
@@ -74,8 +136,6 @@ const MatchList = ({ matches }) => {
                 })}
                 </tbody>
             </table>
-
-
         </div>
     );
 };
