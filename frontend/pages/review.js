@@ -148,7 +148,7 @@ export default function Review() {
                         onChange={(e) => setRank(e.target.value)}
                         className="w-full border rounded p-2"
                     >
-                        {['プラスチック', 'アイアン', 'ブロンズ', 'シルバー', 'ゴールド', 'プラチナ', 'ダイヤモンド', 'アセンダント', 'イモータル', 'レディアント'].map((rank) => (
+                        {['ランクなし', 'プラスチック', 'アイアン', 'ブロンズ', 'シルバー', 'ゴールド', 'プラチナ', 'ダイヤモンド', 'アセンダント', 'イモータル', 'レディアント'].map((rank) => (
                             <option key={rank} value={rank}>
                                 {rank}
                             </option>
