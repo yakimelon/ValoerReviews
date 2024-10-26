@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCommentDots, faHistory} from "@fortawesome/free-solid-svg-icons";
 
 const ChangeUsername = () => {
     const [name, setName] = useState('');
     const [tag, setTag] = useState('');
     const [error, setError] = useState(null);
+
+    const router = useRouter();
 
     useEffect(() => {
         // ユーザーの現在のユーザー名を取得
@@ -80,6 +84,34 @@ const ChangeUsername = () => {
                     ユーザー名を変更する
                 </button>
             </form>
+
+            <hr className="mt-10" />
+
+            <div className="text-center mb-8 mt-5">
+                <p className="mb-4 text-3xl font-semibold">
+                    ▼
+                </p>
+
+                <p className="mb-4 text-lg font-semibold">
+                    RIOT ID が更新出来た？早速プレイヤーをレビューしよう！
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center items-center">
+                    <button
+                        onClick={() => router.push('/review')}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 sm:mr-5"
+                    >
+                        <FontAwesomeIcon icon={faCommentDots} className="mr-2"/>
+                        RIOT ID 入力でレビュー
+                    </button>
+                    <button
+                        onClick={() => router.push('/match_list')}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        <FontAwesomeIcon icon={faHistory} className="mr-2"/>
+                        マッチ履歴からレビュー (β)
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
