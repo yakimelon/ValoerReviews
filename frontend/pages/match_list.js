@@ -43,6 +43,7 @@ const MatchListPage = () => {
                             setMatches(data);
                         } catch (error) {
                             console.error('Fetch error:', error);
+                            setMatches([]);
                         }
                     }
                 }
