@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faSync } from "@fortawesome/free-solid-svg-icons";
-import { supabase } from "@/lib/supabaseClient";
 
 const MatchList = ({ matches }) => {
     const router = useRouter();
@@ -56,6 +55,16 @@ const MatchList = ({ matches }) => {
             setCountdown(300); // 5分のカウントダウンを設定
         }
     };
+
+    const buildTimestamp = (timestamp) => {
+        const inputDate = new Date(timestamp);
+        const year = inputDate.getFullYear();
+        const month = String(inputDate.getMonth() + 1).padStart(2, '0'); // 月は0から始まるため +1
+        const day = String(inputDate.getDate()).padStart(2, '0');
+        const hours = String(inputDate.getHours()).padStart(2, '0');
+        const minutes = String(inputDate.getMinutes()).padStart(2, '0');
+        return `${year}/${month}/${day} ${hours}:${minutes}`;
+    }
 
     return (
         <div className="container mx-auto p-6">
@@ -121,7 +130,7 @@ const MatchList = ({ matches }) => {
                                 </td>
                             </td>
                             <td className="px-4 py-2 text-white">
-                                <div className="text-sm">{mode}・{new Date(timestamp).toLocaleString()}</div>
+                                <div className="text-sm">{mode}・{buildTimestamp(timestamp)}</div>
                                 <div className="text-lg">{map}</div>
                             </td>
                             <td className="px-4 py-2 text-lg">
