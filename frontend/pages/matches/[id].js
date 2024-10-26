@@ -178,7 +178,7 @@ export default function MatchDetail() {
     if (!matchData) return <p>Loading...</p>;
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto p-6 mb-20">
             <button
                 onClick={() => router.push('/match_list')}
                 className="text-gray-500 hover:underline mb-4"
@@ -206,7 +206,7 @@ export default function MatchDetail() {
                         key={index}
                         className={`${
                             selectedPlayers.includes(player.playerName) ? 'bg-green-500' : index % 2 === 0 ? 'bg-gray-900' : 'bg-gray-800'
-                        } hover:bg-gray-700`}
+                        } ${selectedPlayers.includes(player.playerName) ? '' : 'hover:bg-gray-700'}`}
                         onClick={() => handlePlayerClick(player)}
                     >
                         <td className={player.team === 'Red' ? 'bg-red-400' : player.team === 'Blue' ? 'bg-green-400' : ''}
