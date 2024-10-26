@@ -35,7 +35,7 @@ const MatchListPage = () => {
                         const [name, tag] = data.username.split('#');
                         try {
                             // GETリクエストを送信
-                            const response = await fetch(`http://127.0.0.1:54321/functions/v1/valorant?name=${name}&tag=${tag}`);
+                            const response = await fetch(`https://uzxopruksnmxmjltkzzf.supabase.co/functions/v1/valorant?name=${name}&tag=${tag}`);
                             const data = await response.json();
 
                             // 取得したデータをlocalStorageに保存
