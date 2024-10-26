@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
         my_agent: getAgentByTeam(item.players.all_players, name, tag),
         my_agent_image: item.players.all_players.find((player: any) => player.name === name && player.tag === tag).assets.agent.small,
         mode: item.metadata.mode,
-        timestamp: item.metadata.game_start,
+        timestamp: item.metadata.game_start_patched,
         map: item.metadata.map,
         my_team_round: getRoundScore(item.players.all_players, item.teams, 'my', name, tag),
         enemy_team_round: getRoundScore(item.players.all_players, item.teams, 'enemy', name, tag),
