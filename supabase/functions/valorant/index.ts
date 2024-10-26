@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
   });
 
   return new Response(
-    JSON.stringify(metadata),
+    JSON.stringify(metadata.filter((item: any) => item.metadata.mode === 'Competitive')),
     { headers: { "Content-Type": "application/json", ...corsHeaders, } },
   )
 })
