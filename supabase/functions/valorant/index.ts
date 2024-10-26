@@ -29,7 +29,6 @@ Deno.serve(async (req) => {
   });
 
   const data = await response.json();
-  // TODO: redかblueかは固定されていない
   const metadata = data.data.map((item: any) => {
     return {
       metadata: {
