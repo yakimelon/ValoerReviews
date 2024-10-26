@@ -19,7 +19,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment variables
-.env.local
+supabase/.env.local
 .env.*.local
 
 # Supabase local config (if applicable)
@@ -35,3 +35,5 @@ Thumbs.db
 
 # Temporary files
 .tmp/
+
+functions/node_modules
