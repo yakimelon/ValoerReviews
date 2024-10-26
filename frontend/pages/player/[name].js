@@ -62,7 +62,7 @@ export default function PlayerReviews() {
     if (!player) return <p>Loading...</p>;
 
     const ogImageUrl = 'https://i.gyazo.com/07258026dd555df91524629538086396.png'; // OGP画像のURL
-    const ogUrl = `https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`; // OGP URL
+    const ogUrl = `https://reviewant/player/${encodeURIComponent(player.name)}`; // OGP URL
 
     return (
         <div className="container mx-auto p-6">
@@ -81,7 +81,7 @@ export default function PlayerReviews() {
                 </h1>
                 <div className="flex flex-col sm:flex-row">
                     <div className="mb-2 sm:mb-0 sm:mr-2">
-                        <TweetButton text={buildPlayerTweetText()} url={`https://valoer-reviews.vercel.app/player/${encodeURIComponent(player.name)}`} />
+                        <TweetButton text={buildPlayerTweetText()} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
                     </div>
                     <button
                         onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}

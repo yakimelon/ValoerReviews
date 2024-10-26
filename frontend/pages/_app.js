@@ -88,7 +88,7 @@ export default function MyApp({ Component, pageProps }) {
                 <meta property="og:description"
                       content="Reviewant で日々の VALORANT をもっと楽しく、ストレスフリーにしませんか？"/>
                 <meta property="og:image" content="https://i.gyazo.com/07258026dd555df91524629538086396.png"/>
-                <meta property="og:url" content="https://valoer-reviews.vercel.app"/>
+                <meta property="og:url" content="https://reviewant.games"/>
                 <meta property="og:type" content="website"/>
             </Head>
             <Header session={session} username={username} onLogout={handleLogout}/>
