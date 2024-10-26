@@ -83,8 +83,8 @@ export default function MyApp({ Component, pageProps }) {
                         `,
                     }}
                 />
-                <title>Reviewant｜プレイヤーレビューサイト</title>
-                <meta property="og:title" content="Reviewant｜プレイヤーレビューサイト"/>
+                <title>Reviewant｜VALORANTプレイヤーレビューサイト</title>
+                <meta property="og:title" content="Reviewant｜VALORANTプレイヤーレビューサイト"/>
                 <meta property="og:description"
                       content="Reviewant で日々の VALORANT をもっと楽しく、ストレスフリーにしませんか？"/>
                 <meta property="og:image" content="https://i.gyazo.com/07258026dd555df91524629538086396.png"/>
@@ -147,7 +147,7 @@ function Header({session, username, onLogout}) {
         <header className="bg-gray-800 text-white p-4 fixed top-0 left-0 right-0 z-50 flex justify-between items-center mb-6">
             <img
                 src="/logo.png"
-                alt="Valoer Reviews Logo"
+                alt="Reviewant Logo"
                 className="cursor-pointer h-12"
                 style={{ marginTop: '-8px' }}
                 onClick={() => router.push('/')}
