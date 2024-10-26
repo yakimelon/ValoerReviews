@@ -4,7 +4,7 @@ import {supabase} from "@/lib/supabaseClient";
 import {useRouter} from "next/router";
 
 const MatchListPage = () => {
-    const [matches, setMatches] = useState([]);
+    const [matches, setMatches] = useState(null);
     const router = useRouter();
 
     // ユーザーセッションとユーザー名を取得
@@ -50,6 +50,10 @@ const MatchListPage = () => {
         };
         checkSession();
     }, [router]);
+
+    if (!matches){
+        return <p>Loading...</p>;
+    }
 
     return <MatchList matches={matches} />;
 };
