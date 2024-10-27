@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import {useEffect, useState} from 'react';
-import {supabase} from "@/lib/supabaseClient";
+import { useEffect, useState } from 'react';
+import { supabase } from "@/lib/supabaseClient";
 import ReactStars from "react-rating-stars-component";
 
 export default function MatchDetail() {
@@ -11,48 +11,20 @@ export default function MatchDetail() {
     const [userSelection, setUserSelection] = useState(''); // 投稿者選択用の状態
     const [username, setUsername] = useState(''); // 現在のユーザー名を保存
     const [selectedPlayers, setSelectedPlayers] = useState([]); // 選択中のプレイヤーを管理
+    const [scheduledPostTime, setScheduledPostTime] = useState('now'); // 投稿時間の状態
 
     const rankIdToString = (rankId) => {
         switch (rankId) {
-            case 0:
-                return "ランクなし";
-            case 1:
-            case 2:
-                return "Unknown";
-            case 3:
-            case 4:
-            case 5:
-                return "アイアン";
-            case 6:
-            case 7:
-            case 8:
-                return "ブロンズ";
-            case 9:
-            case 10:
-            case 11:
-                return "シルバー";
-            case 12:
-            case 13:
-            case 14:
-                return "ゴールド";
-            case 15:
-            case 16:
-            case 17:
-                return "プラチナ";
-            case 18:
-            case 19:
-            case 20:
-                return "ダイヤ";
-            case 21:
-            case 22:
-            case 23:
-                return "アセンダント";
-            case 24:
-            case 25:
-            case 26:
-                return "イモータル";
-            case 27:
-                return "レディアント";
+            case 0: return "ランクなし";
+            case 3: case 4: case 5: return "アイアン";
+            case 6: case 7: case 8: return "ブロンズ";
+            case 9: case 10: case 11: return "シルバー";
+            case 12: case 13: case 14: return "ゴールド";
+            case 15: case 16: case 17: return "プラチナ";
+            case 18: case 19: case 20: return "ダイヤ";
+            case 21: case 22: case 23: return "アセンダント";
+            case 24: case 25: case 26: return "イモータル";
+            case 27: return "レディアント";
         }
     }
 
@@ -164,6 +136,7 @@ export default function MatchDetail() {
                     rank: rankIdToString(review.rank),
                     rating: review.rating,
                     comment: review.comment,
+                    scheduled_post_time: scheduledPostTime === 'now' ? null : new Date(Date.now() + parseInt(scheduledPostTime) * 60 * 60 * 1000).toISOString(), // スケジュール投稿時間
                     created_at: new Date().toISOString(),
                 },
             ]);
@@ -250,6 +223,27 @@ export default function MatchDetail() {
                                 />
                             </div>
                         ))}
+
+                        <hr />
+
+                        {/* スケジュール投稿時間の選択 */}
+                        <div>
+                            <label htmlFor="scheduledPostTime" className="block mb-1 font-medium">
+                                いつ投稿されるようにする？
+                            </label>
+                            <select
+                                id="scheduledPostTime"
+                                value={scheduledPostTime}
+                                onChange={(e) => setScheduledPostTime(e.target.value)}
+                                className="w-full border rounded p-2"
+                            >
+                                <option value="now">今すぐ</option>
+                                <option value="1">1時間後</option>
+                                <option value="3">3時間後</option>
+                                <option value="5">5時間後</option>
+                                <option value="24">24時間後</option>
+                            </select>
+                        </div>
                         {/* 投稿者選択のプルダウン */}
                         <div>
                             <label htmlFor="userSelection" className="block mb-1 font-medium">

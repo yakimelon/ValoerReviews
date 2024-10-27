@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import TweetButton from "@/components/TweetButton";
 import Head from "next/head";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCommentDots} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 
 export default function PlayerReviews() {
     const [player, setPlayer] = useState(null);
@@ -29,6 +29,7 @@ export default function PlayerReviews() {
                     rating,
                     comment,
                     created_at,
+                    scheduled_post_time,
                     users (username)
                 )
             `)
@@ -39,8 +40,14 @@ export default function PlayerReviews() {
             console.error('Error fetching player reviews:', error);
             setPlayer(null);
         } else {
+            // reviews をフィルタリングして未来の日付のものを除外
+            const now = new Date().toISOString();
+            const validReviews = data.reviews.filter(review =>
+                !review.scheduled_post_time || review.scheduled_post_time <= now
+            );
+            data.reviews = validReviews; // フィルタリングしたレビューをセット
             setPlayer(data);
-            calculateAverageRating(data.reviews); // 平均評価を計算
+            calculateAverageRating(validReviews); // 平均評価を計算
         }
     };
 
@@ -57,7 +64,7 @@ export default function PlayerReviews() {
 
     const buildPlayerTweetText = () => {
         return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n\n#Reviewant は #VALORANT プレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
-    }
+    };
 
     if (!player) return <p>Loading...</p>;
 
@@ -109,7 +116,8 @@ export default function PlayerReviews() {
                                 {Array(5)
                                     .fill('☆')
                                     .map((star, index) => (
-                                        <span key={index} className={index < review.rating ? 'text-yellow-500' : ''}>
+                                        <span key={index}
+                                              className={index < review.rating ? 'text-yellow-500' : ''}>
                                             {index < review.rating ? '★' : '☆'}
                                         </span>
                                     ))}

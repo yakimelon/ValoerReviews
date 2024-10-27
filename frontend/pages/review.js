@@ -11,6 +11,7 @@ export default function Review() {
     const [comment, setComment] = useState('');
     const [userSelection, setUserSelection] = useState(''); // 投稿者選択用の状態
     const [username, setUsername] = useState(''); // 現在のユーザー名を保存
+    const [scheduledPostTime, setScheduledPostTime] = useState('now'); // 投稿時間の状態
     const router = useRouter();
     const { playerName: defaultPlayerName } = router.query;
 
@@ -37,7 +38,7 @@ export default function Review() {
         checkSession();
     }, [router]);
 
-// ユーザー名を users テーブルから取得
+    // ユーザー名を users テーブルから取得
     const fetchUsername = async (userId) => {
         const { data, error } = await supabase
             .from('users')
@@ -91,6 +92,15 @@ export default function Review() {
 
         const userId = userSelection === 'anonymous' ? null : user.id;
 
+        // 現在の時刻または指定された時間を計算
+        let postTime;
+        if (scheduledPostTime === 'now') {
+            postTime = null;
+        } else {
+            const hoursToAdd = parseInt(scheduledPostTime, 10);
+            postTime = new Date(Date.now() + hoursToAdd * 60 * 60 * 1000).toISOString();
+        }
+
         const { error: reviewError } = await supabase.from('reviews').insert([
             {
                 player_id: player.id,
@@ -98,6 +108,7 @@ export default function Review() {
                 rank,
                 rating,
                 comment,
+                scheduled_post_time: postTime,
                 created_at: new Date().toISOString(),
             },
         ]);
@@ -168,6 +179,24 @@ export default function Review() {
                         className="w-full border rounded p-2 min-h-[150px] resize-none"
                         required
                     ></textarea>
+                </div>
+
+                <div>
+                    <label htmlFor="scheduledPostTime" className="block mb-1 font-medium">
+                        いつ投稿されるようにする？
+                    </label>
+                    <select
+                        id="scheduledPostTime"
+                        value={scheduledPostTime}
+                        onChange={(e) => setScheduledPostTime(e.target.value)}
+                        className="w-full border rounded p-2"
+                    >
+                        <option value="now">今すぐ</option>
+                        <option value="1">1時間後</option>
+                        <option value="3">3時間後</option>
+                        <option value="5">5時間後</option>
+                        <option value="24">24時間後</option>
+                    </select>
                 </div>
 
                 {/* 投稿者選択のプルダウン */}
