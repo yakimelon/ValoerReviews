@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faSync } from "@fortawesome/free-solid-svg-icons";
+import {supabase} from "@/lib/supabaseClient";
 
 const MatchList = ({ matches }) => {
     const router = useRouter();
     const [canRefresh, setCanRefresh] = useState(true);
     const [countdown, setCountdown] = useState(0);
+    const [isLoggedin, setIsLoggedin] = useState(false);
 
     // 更新ボタンの処理
     const handleRefresh = () => {
@@ -14,6 +16,14 @@ const MatchList = ({ matches }) => {
         localStorage.setItem("LAST_REFRESH", Date.now()); // 現在の時刻を保存
         router.reload(); // ページのリロード
     };
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) setIsLoggedin(true);
+        };
+        checkSession();
+    }, []);
 
     // 5分ごとの更新制御
     useEffect(() => {
@@ -81,19 +91,28 @@ const MatchList = ({ matches }) => {
                 &lt; TOPに戻る
             </button>
 
-            <p>
-                <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
-                マッチが表示されませんか？RIOT IDを
-                <button
-                    onClick={() => router.push('/change_username')}
-                    className="text-blue-400 hover:underline mb-4"
-                >
-                    編集
-                </button>
-                してください。
-            </p>
+            { isLoggedin && (
+                <p>
+                    <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
+                    マッチが表示されませんか？RIOT IDを
+                    <button
+                        onClick={() => router.push('/change_username')}
+                        className="text-blue-400 hover:underline mb-4"
+                    >
+                        編集
+                    </button>
+                    してください。
+                </p>
+            )}
 
-            <br />
+            { !isLoggedin && (
+                <p>
+                    <FontAwesomeIcon icon={faLightbulb} className="mr-2"/>
+                    マッチが表示されませんか？更新ボタンを押して再度 RIOT ID を入力してみてください。<br />
+                </p>
+            )}
+
+            <br/>
 
             <h1 className="text-2xl font-bold mb-4 flex items-center justify-between">
                 直近のコンペティティブ一覧

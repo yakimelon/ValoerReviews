@@ -9,7 +9,7 @@ export default function Review() {
     const [rank, setRank] = useState('ブロンズ');
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
-    const [userSelection, setUserSelection] = useState(''); // 投稿者選択用の状態
+    const [userSelection, setUserSelection] = useState('anonymous'); // 投稿者選択用の状態
     const [username, setUsername] = useState(''); // 現在のユーザー名を保存
     const [scheduledPostTime, setScheduledPostTime] = useState('now'); // 投稿時間の状態
     const router = useRouter();
@@ -28,9 +28,7 @@ export default function Review() {
     useEffect(() => {
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                router.push(`/login?returnUrl=${encodeURIComponent(router.asPath)}`);
-            } else {
+            if (session) {
                 const userId = session.user.id; // セッションからユーザーIDを取得
                 fetchUsername(userId); // ユーザー名を取得
             }
@@ -61,12 +59,7 @@ export default function Review() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) {
-            alert('ユーザー情報の取得に失敗しました。');
-            return;
-        }
-
+        const { data: { user } } = await supabase.auth.getUser();
         const playerNameWithTag = `${name}#${tag}`;
 
         let { data: player } = await supabase
@@ -90,7 +83,7 @@ export default function Review() {
             player = newPlayer;
         }
 
-        const userId = userSelection === 'anonymous' ? null : user.id;
+        const userId = userSelection === 'anonymous' ? null : user?.id;
 
         // 現在の時刻または指定された時間を計算
         let postTime;
@@ -200,20 +193,22 @@ export default function Review() {
                 </div>
 
                 {/* 投稿者選択のプルダウン */}
-                <div>
-                    <label htmlFor="userSelection" className="block mb-1 font-medium">
-                        投稿者を選択
-                    </label>
-                    <select
-                        id="userSelection"
-                        value={userSelection}
-                        onChange={(e) => setUserSelection(e.target.value)}
-                        className="w-full border rounded p-2"
-                    >
-                        <option value="user">{username} で投稿する</option>
-                        <option value="anonymous">匿名で投稿する</option>
-                    </select>
-                </div>
+                { username &&
+                    <div>
+                        <label htmlFor="userSelection" className="block mb-1 font-medium">
+                            投稿者を選択
+                        </label>
+                        <select
+                            id="userSelection"
+                            value={userSelection}
+                            onChange={(e) => setUserSelection(e.target.value)}
+                            className="w-full border rounded p-2"
+                        >
+                            <option value="user">{username} で投稿する</option>
+                            <option value="anonymous">匿名で投稿する</option>
+                        </select>
+                    </div>
+                }
 
                 <div>
                     <label className="block mb-1 font-medium">評価</label>

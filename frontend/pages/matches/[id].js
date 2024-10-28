@@ -9,7 +9,7 @@ export default function MatchDetail() {
     const { id } = router.query;
     const [matchData, setMatchData] = useState(null);
     const [reviews, setReviews] = useState([]); // 各プレイヤーのレビュー情報を管理
-    const [userSelection, setUserSelection] = useState(''); // 投稿者選択用の状態
+    const [userSelection, setUserSelection] = useState('anonymous'); // 投稿者選択用の状態
     const [username, setUsername] = useState(''); // 現在のユーザー名を保存
     const [selectedPlayers, setSelectedPlayers] = useState([]); // 選択中のプレイヤーを管理
     const [scheduledPostTime, setScheduledPostTime] = useState('now'); // 投稿時間の状態
@@ -41,9 +41,7 @@ export default function MatchDetail() {
     useEffect(() => {
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                router.push(`/login?returnUrl=${encodeURIComponent(router.asPath)}`);
-            } else {
+            if (session) {
                 const userId = session.user.id; // セッションからユーザーIDを取得
                 fetchUsername(userId); // ユーザー名を取得
             }
@@ -98,11 +96,7 @@ export default function MatchDetail() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) {
-            alert('ユーザー情報の取得に失敗しました。');
-            return;
-        }
+        const { data: { user } } = await supabase.auth.getUser();
 
         // プレイヤーを存在チェックし、存在しない場合は作成
         const reviewPromises = reviews.map(async (review) => {
@@ -130,7 +124,7 @@ export default function MatchDetail() {
             }
 
             // レビューを投稿
-            const userId = userSelection === 'anonymous' ? null : user.id;
+            const userId = userSelection === 'anonymous' ? null : user?.id;
             return supabase.from('reviews').insert([
                 {
                     player_id: player.id, // プレイヤーID
@@ -286,20 +280,22 @@ export default function MatchDetail() {
                             </select>
                         </div>
                         {/* 投稿者選択のプルダウン */}
-                        <div>
-                            <label htmlFor="userSelection" className="block mb-1 font-medium">
-                                投稿者を選択
-                            </label>
-                            <select
-                                id="userSelection"
-                                value={userSelection}
-                                onChange={(e) => setUserSelection(e.target.value)}
-                                className="w-full border rounded p-2"
-                            >
-                                <option value="user">{username} で投稿する</option>
-                                <option value="anonymous">匿名で投稿する</option>
-                            </select>
-                        </div>
+                        { username &&
+                            <div>
+                                <label htmlFor="userSelection" className="block mb-1 font-medium">
+                                    投稿者を選択
+                                </label>
+                                <select
+                                    id="userSelection"
+                                    value={userSelection}
+                                    onChange={(e) => setUserSelection(e.target.value)}
+                                    className="w-full border rounded p-2"
+                                >
+                                    <option value="user">{username} で投稿する</option>
+                                    <option value="anonymous">匿名で投稿する</option>
+                                </select>
+                            </div>
+                        }
                         <button
                             type="submit"
                             className="bg-blue-500 text-white p-2 rounded"
