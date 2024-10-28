@@ -8,9 +8,9 @@ import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 
 export default function PlayerReviews() {
     const [player, setPlayer] = useState(null);
-    const [averageRating, setAverageRating] = useState(null); // 平均評価の状態
+    const [averageRating, setAverageRating] = useState(null);
     const router = useRouter();
-    const { name } = router.query; // URLのプレイヤー名を取得
+    const { name } = router.query;
 
     useEffect(() => {
         if (name) fetchPlayerWithReviews();
@@ -40,36 +40,37 @@ export default function PlayerReviews() {
             console.error('Error fetching player reviews:', error);
             setPlayer(null);
         } else {
-            // reviews をフィルタリングして未来の日付のものを除外
             const now = new Date().toISOString();
             const validReviews = data.reviews.filter(review =>
                 !review.scheduled_post_time || review.scheduled_post_time <= now
             );
-            data.reviews = validReviews; // フィルタリングしたレビューをセット
+            data.reviews = validReviews;
             setPlayer(data);
-            calculateAverageRating(validReviews); // 平均評価を計算
+            calculateAverageRating(validReviews);
         }
     };
 
-    // 平均評価を計算する関数
     const calculateAverageRating = (reviews) => {
         if (reviews.length === 0) {
             setAverageRating('N/A');
             return;
         }
         const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-        const average = (totalRating / reviews.length).toFixed(1); // 小数点1桁に丸める
+        const average = (totalRating / reviews.length).toFixed(1);
         setAverageRating(average);
     };
 
-    const buildPlayerTweetText = () => {
-        return `${player.name} のプレイヤーレビューページ（平均評価: ${averageRating}）\n\n#Reviewant は #VALORANT プレイヤーの評価を投稿・閲覧できるサイトです！\n\n`;
+    const buildPlayerTweetText = (review) => {
+        const stars = Array(5)
+            .fill('☆')
+            .map((star, index) => (index < review.rating ? '★' : '☆')).join('');
+        return `■ ${player.name} のレビュー内容\n評価: ${stars}\n内容: ${review.comment}\n\n`;
     };
 
     if (!player) return <p>Loading...</p>;
 
-    const ogImageUrl = 'https://i.gyazo.com/07258026dd555df91524629538086396.png'; // OGP画像のURL
-    const ogUrl = `https://reviewant/player/${encodeURIComponent(player.name)}`; // OGP URL
+    const ogImageUrl = 'https://i.gyazo.com/07258026dd555df91524629538086396.png';
+    const ogUrl = `https://reviewant/player/${encodeURIComponent(player.name)}`;
 
     return (
         <div className="container mx-auto p-6">
@@ -88,7 +89,7 @@ export default function PlayerReviews() {
                 </h1>
                 <div className="flex flex-col sm:flex-row">
                     <div className="mb-2 sm:mb-0 sm:mr-2">
-                        <TweetButton text={buildPlayerTweetText()} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
+                        <TweetButton text={`プレイヤー名: ${player.name} のレビュー`} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
                     </div>
                     <button
                         onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}
@@ -103,32 +104,35 @@ export default function PlayerReviews() {
 
             {player.reviews.length > 0 ? (
                 player.reviews
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // 新着順にソート
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                     .map((review) => (
-                        <div key={review.id} className="mb-6 border-b pb-4">
-                            <p className="text-sm font-semibold">
-                                レビュアー: {review.users?.username || '匿名'}
-                            </p>
-                            <p className="text-sm">対象者のランク: {review.rank}</p>
+                        <div key={review.id} className="mb-6 border-b pb-4 flex justify-between items-start">
+                            <div className="flex-1">
+                                <p className="text-sm font-semibold">
+                                    レビュアー: {review.users?.username || '匿名'}
+                                </p>
+                                <p className="text-sm">対象者のランク: {review.rank}</p>
 
-                            {/* 星評価の表示 */}
-                            <p className="text-sm">
-                                {Array(5)
-                                    .fill('☆')
-                                    .map((star, index) => (
-                                        <span key={index}
-                                              className={index < review.rating ? 'text-yellow-500' : ''}>
-                                            {index < review.rating ? '★' : '☆'}
-                                        </span>
-                                    ))}
-                            </p>
+                                <p className="text-sm">
+                                    {Array(5)
+                                        .fill('☆')
+                                        .map((star, index) => (
+                                            <span key={index} className={index < review.rating ? 'text-yellow-500' : ''}>
+                                                {index < review.rating ? '★' : '☆'}
+                                            </span>
+                                        ))}
+                                </p>
 
-                            <p className="whitespace-pre-wrap">{review.comment}</p>
-                            <p className="text-xs text-gray-500">
-                                {review.scheduled_post_time ?
-                                    new Date(review.scheduled_post_time).toLocaleString() :
-                                    new Date(review.created_at).toLocaleString()}
-                            </p>
+                                <p className="whitespace-pre-wrap">{review.comment}</p>
+                                <p className="text-xs text-gray-500">
+                                    {review.scheduled_post_time ?
+                                        new Date(review.scheduled_post_time).toLocaleString() :
+                                        new Date(review.created_at).toLocaleString()}
+                                </p>
+                            </div>
+                            <div className="ml-4">
+                                <TweetButton text={buildPlayerTweetText(review)} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
+                            </div>
                         </div>
                     ))
             ) : (

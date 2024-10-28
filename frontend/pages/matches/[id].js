@@ -1,7 +1,8 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { supabase } from "@/lib/supabaseClient";
 import ReactStars from "react-rating-stars-component";
+import TweetButton from "@/components/TweetButton";
 
 export default function MatchDetail() {
     const router = useRouter();
@@ -12,6 +13,7 @@ export default function MatchDetail() {
     const [username, setUsername] = useState(''); // 現在のユーザー名を保存
     const [selectedPlayers, setSelectedPlayers] = useState([]); // 選択中のプレイヤーを管理
     const [scheduledPostTime, setScheduledPostTime] = useState('now'); // 投稿時間の状態
+    const [showPopup, setShowPopup] = useState(false); // ポップアップ表示用の状態
 
     const rankIdToString = (rankId) => {
         switch (rankId) {
@@ -144,9 +146,25 @@ export default function MatchDetail() {
 
         await Promise.all(reviewPromises); // すべてのレビューを一括投稿
 
-        alert('レビューが投稿されました！');
-        router.push(`/match_list`); // マッチ詳細画面にリダイレクト
+        setShowPopup(true); // ポップアップを表示
     };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+        router.push('/match_list'); // マッチ詳細画面にリダイレクト
+    };
+
+    const buildPlayerTweetText = () => {
+        const tweetContent = reviews.map(review => {
+            const stars = Array(5)
+                .fill('☆')
+                .map((star, index) => (index < review.rating ? '★' : '☆')).join('');
+            return `■ ${review.playerName} \n評価: ${stars}\n内容: ${review.comment}`;
+        }).join('\n\n'); // 各レビューの間に空行を入れる
+
+        return `マッチで出会ったプレイヤーをレビューしました✨️\n\n${tweetContent}\n\n`;
+    };
+
 
     if (!matchData) return <p>Loading...</p>;
 
@@ -160,6 +178,29 @@ export default function MatchDetail() {
             </button>
 
             <h1 className="text-3xl font-bold mb-6">マッチ詳細</h1>
+
+            {showPopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded shadow-lg text-center mx-4">
+                        <h2 className="text-xl font-bold mb-4 text-black">
+                            投稿に成功しました！ <br />レビューしたことをツイートしよう👍️
+                        </h2>
+
+                        {/* TweetButtonを中央寄せ */}
+                        <div className="flex justify-center mb-4">
+                            <TweetButton text={buildPlayerTweetText()} url="https://reviewant.games"/>
+                        </div>
+
+                        <button
+                            onClick={handleClosePopup}
+                            className="bg-gray-300 text-black py-2 px-4 rounded text-sm"
+                        >
+                            マッチ履歴へ戻る
+                        </button>
+                    </div>
+                </div>
+            )}
+
 
             <table className="w-full">
                 <thead>
