@@ -64,7 +64,7 @@ export default function PlayerReviews() {
         const stars = Array(5)
             .fill('☆')
             .map((star, index) => (index < review.rating ? '★' : '☆')).join('');
-        return `■ ${player.name} に対してレビューしました！\n評価: ${stars}\n内容: ${review.comment}\n#Reviewant\n\n`;
+        return `■ ${player.name} のレビュー！\n評価: ${stars}\n内容: ${review.comment}\n#Reviewant\n\n`;
     };
 
     if (!player) return <p>Loading...</p>;
