@@ -125,7 +125,9 @@ export default function PlayerReviews() {
 
                             <p className="whitespace-pre-wrap">{review.comment}</p>
                             <p className="text-xs text-gray-500">
-                                {new Date(review.created_at).toLocaleString()}
+                                {review.scheduled_post_time ?
+                                    new Date(review.scheduled_post_time).toLocaleString() :
+                                    new Date(review.created_at).toLocaleString()}
                             </p>
                         </div>
                     ))
