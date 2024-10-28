@@ -64,7 +64,7 @@ export default function PlayerReviews() {
         const stars = Array(5)
             .fill('☆')
             .map((star, index) => (index < review.rating ? '★' : '☆')).join('');
-        return `■ ${player.name} のレビュー内容\n評価: ${stars}\n内容: ${review.comment}\n\n`;
+        return `■ ${player.name} に対してレビューしました！\n評価: ${stars}\n内容: ${review.comment}\n#Reviewant\n\n`;
     };
 
     if (!player) return <p>Loading...</p>;
@@ -89,7 +89,7 @@ export default function PlayerReviews() {
                 </h1>
                 <div className="flex flex-col sm:flex-row">
                     <div className="mb-2 sm:mb-0 sm:mr-2">
-                        <TweetButton text={`プレイヤー名: ${player.name} のレビュー`} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
+                        <TweetButton text={`プレイヤー名: ${player.name} のレビュー\n#Reviewant`} url={`https://reviewant.games/player/${encodeURIComponent(player.name)}`} />
                     </div>
                     <button
                         onClick={() => router.push(`/review?playerName=${encodeURIComponent(player.name)}`)}

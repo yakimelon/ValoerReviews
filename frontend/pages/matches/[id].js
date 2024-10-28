@@ -162,7 +162,7 @@ export default function MatchDetail() {
             return `■ ${review.playerName} \n評価: ${stars}\n内容: ${review.comment}`;
         }).join('\n\n'); // 各レビューの間に空行を入れる
 
-        return `マッチで出会ったプレイヤーをレビューしました✨️\n\n${tweetContent}\n\n`;
+        return `#Reviewant でマッチで出会ったプレイヤーをレビューしました✨️\n\n${tweetContent}\n\n`;
     };
 
 
