@@ -7,9 +7,14 @@ const apiSecretKey = Deno.env.get("X_API_SECRET_KEY")!;
 const accessToken = Deno.env.get("X_ACCESS_TOKEN")!;
 const accessTokenSecret = Deno.env.get("X_ACCESS_TOKEN_SECRET")!;
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: { "Access-Control-Allow-Origin": "*" } });
+    return new Response("ok", { headers: corsHeaders })
   }
 
   if (req.method !== "POST") {
