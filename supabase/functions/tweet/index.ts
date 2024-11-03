@@ -28,6 +28,7 @@ Deno.serve(async (req) => {
   const { text } = await req.json();
   const message = await getOpenAIMessage(text);
   const res = await postTweet(`${message}\n\n${text}`);
+  console.log(res);
   return new Response(JSON.stringify(res), { headers: { "Access-Control-Allow-Origin": "*" } });
 });
 
