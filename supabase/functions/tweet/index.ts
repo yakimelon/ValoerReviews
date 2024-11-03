@@ -14,7 +14,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
 }
 
-const initPrompt = 'あなたはバズを連続でヒットさせる有名SNSマーケターです。VALORANTプレイヤーをレビューするサイト、Reviewant の運営を任されており、以下のレビューの感想をツイート用に適切な短いメッセージを作成してください。投稿の目的は「Reviewantへのアクセスを伸ばす」ことです。作成した感想文章は以下の文章の先頭に加えて、レビューと共にツイートされますので、出力は「感想文章のみ」としてかぎ括弧などの装飾も不要、言葉だけをそのまま出力してください。'
+const initPrompt = 'あなたはバズを連続でヒットさせる有名SNSマーケターです。VALORANTプレイヤーをレビューするサイト、Reviewant の運営を任されており、以下のレビューの感想をツイート用に適切な短いメッセージを作成してください。投稿の目的は「Reviewantへのアクセスを伸ばす」ことです。作成した感想文章は以下の文章の先頭に加えて、レビューと共にツイートされますので、出力は「感想文章のみ」としてかぎ括弧などの装飾も不要、言葉だけをそのまま出力してください。また、言い回しとしては一般的ツイッター民のぼやきみたいな雰囲気が出るとベストです、作り物っぽくなくより一般人っぽいツイートを心がけてください。'
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -48,12 +48,28 @@ async function postTweet(text: string) {
 
 // OpenAI APIからメッセージを取得する関数
 async function getOpenAIMessage(text: string): Promise<string> {
-  const client = new openai.OpenAI(openaiApiKey);
-  const response = await client.createCompletion({
-    model: "gpt-4o", // 適切なモデルを指定
-    prompt: `${initPrompt}\n\n${text}`,
-    max_tokens: 50,
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${openaiApiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o",
+      messages: [
+        {
+          "role": "system",
+          "content": initPrompt,
+        },
+        {
+          "role": "user",
+          "content": `${text}`,
+        }
+      ],
+      max_tokens: 50
+    })
   });
-
-  return response.choices[0].text.trim();
+  const data = await response.json();
+  console.log(data)
+  return data.choices[0].message.content.trim();
 }
