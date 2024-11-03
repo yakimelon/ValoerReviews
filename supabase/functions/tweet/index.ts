@@ -16,7 +16,8 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const res = await postTweet("Hello, Twitter API!");
+  const { text } = await req.json();
+  const res = await postTweet(text);
   console.log(res);
   return new Response(JSON.stringify(res), { headers: { "Access-Control-Allow-Origin": "*" } });
 });
