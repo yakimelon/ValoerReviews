@@ -102,45 +102,71 @@ export default function MatchDetail() {
         const reviewPromises = reviews.map(async (review) => {
             // プレイヤーが存在するかチェック
             let { data: player, error: playerError } = await supabase
-                .from('players')
-                .select('id')
-                .eq('name', review.playerName)
+                .from("players")
+                .select("id")
+                .eq("name", review.playerName)
                 .single();
 
             if (!player) {
                 // プレイヤーが存在しない場合、新規作成
                 const { data: newPlayer, error: insertError } = await supabase
-                    .from('players')
+                    .from("players")
                     .insert([{ name: review.playerName }])
                     .select()
                     .single();
 
                 if (insertError) {
-                    console.error('Error creating player:', insertError);
-                    alert('プレイヤーの登録に失敗しました。');
+                    console.error("Error creating player:", insertError);
+                    alert("プレイヤーの登録に失敗しました。");
                     return; // エラーが発生した場合は処理を終了
                 }
                 player = newPlayer; // 新規作成したプレイヤーを使用
             }
 
             // レビューを投稿
-            const userId = userSelection === 'anonymous' ? null : user?.id;
-            return supabase.from('reviews').insert([
+            const userId = userSelection === "anonymous" ? null : user?.id;
+            await supabase.from("reviews").insert([
                 {
                     player_id: player.id, // プレイヤーID
                     user_id: userId, // 現在のユーザーID
                     rank: rankIdToString(review.rank),
                     rating: review.rating,
                     comment: review.comment,
-                    scheduled_post_time: scheduledPostTime === 'now' ? null : new Date(Date.now() + parseInt(scheduledPostTime) * 60 * 60 * 1000).toISOString(), // スケジュール投稿時間
+                    scheduled_post_time:
+                        scheduledPostTime === "now"
+                            ? null
+                            : new Date(Date.now() + parseInt(scheduledPostTime) * 60 * 60 * 1000).toISOString(), // スケジュール投稿時間
                     created_at: new Date().toISOString(),
                 },
             ]);
+
+            // ツイート内容を生成
+            const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+            const appUrl = `https://reviewant.games/player/${encodeURIComponent(review.playerName)}`
+            const tweetText = `■ ${review.playerName} がレビューされました！\n評価: ${stars}\n内容: ${review.comment}\n\n#Reviewant で野良をレビューしよう！\n#VALORANT をもっと楽しく、ストレスフリーに。\n${appUrl}`;
+
+            // レビューごとにツイート
+            return postTweet(tweetText);
         });
 
         await Promise.all(reviewPromises); // すべてのレビューを一括投稿
 
         setShowPopup(true); // ポップアップを表示
+    };
+
+    const postTweet = async (tweetText) => {
+        try {
+            const response = await fetch("https://uzxopruksnmxmjltkzzf.supabase.co/functions/v1/tweet", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: tweetText })
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Error posting tweet:", error);
+        }
     };
 
     const handleClosePopup = () => {
