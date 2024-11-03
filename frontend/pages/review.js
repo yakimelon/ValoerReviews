@@ -111,7 +111,29 @@ export default function Review() {
             alert('レビューの投稿に失敗しました。');
         } else {
             alert('レビューが投稿されました！');
+
+            // ツイート内容を生成
+            const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+            const appUrl = `https://reviewant.games/player/${encodeURIComponent(playerNameWithTag)}`
+            const tweetText = `■ ${playerNameWithTag} がレビューされました！\n評価: ${stars}\n内容: ${comment}\n\n#Reviewant で野良をレビューしよう！\n#VALORANT をもっと楽しく、ストレスフリーに。\n${appUrl}`;
+            await postTweet(tweetText);
+
             router.push(`/player/${encodeURIComponent(playerNameWithTag)}`);
+        }
+    };
+
+    const postTweet = async (tweetText) => {
+        try {
+            const response = await fetch("https://uzxopruksnmxmjltkzzf.supabase.co/functions/v1/tweet", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: tweetText })
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Error posting tweet:", error);
         }
     };
 
